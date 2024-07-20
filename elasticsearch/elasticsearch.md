@@ -16,7 +16,8 @@ Về sau chỉ cần vào Docker Desktop -> Chọn tab Containers và Run elasti
 
 **1. Tải Kibana**    
 Mở Docker Desktop:
-  - Tìm image Kibana trên Docker Desktop và Pull về máy.
+  - Tìm image Kibana trên Docker Desktop và Pull về máy.  
+
 **2. Sử dụng Kibana**  
 Mở Command Prompt:
   - Kiểm tra đã tải thành công Kibana hay chưa: ```docker images``` nếu thành công sẽ hiển thị "kibana" ở cột REPOSITORY.
@@ -30,7 +31,23 @@ Bật tab Dev Tools trên giao diện của Kibana và có thể thử 1 số l�
   - **Xoá index bất kì:** ```DELETE /indexname1``` trong đó [indexname1] là tên của index bạn muốn xoá.
   - **Xem mapping của index bất kì:** ```GET /indexname1/_mapping``` trong đó [indexname1] là tên của index bạn muốn xem mapping.  
 
-  **Lưu ý:** Bạn cũng có thể dùng code Python để thực hiện các chức năng trên nếu không muốn sử dụng Kibana.
+  **Lưu ý:** Bạn cũng có thể dùng code Python để thực hiện các chức năng trên nếu không muốn sử dụng Kibana.  
+
+## Dùng chatbot hỗ trợ sinh câu hỏi (sử dụng elasticsearch)
+**1. Lưu cấu trúc dữ liệu từ file .json lên Elasticsearch**  
+  - Khởi động elasticsearch container.
+  - Run file **index_to_elasticsearch.py** để có thể lưu dữ liệu từ file **qtda.json** lên elasticsearch.  
+
+**2. Sử dụng chatbot**  
+  - Run file **app.py** và truy cập vào http://127.0.0.1:5000/ để dùng chatbot ở localhost.
+  - Các cú pháp để dùng chatbot:  
+    - **Xem cấu trúc chương, tiêu đề chính, tiêu đề phụ, tiểu mục của môn học mà chúng tôi hỗ trợ:** ```chương hỗ trợ```
+    - **Tạo số lượng câu hỏi cho chương bất kì:** ```chapter: [tên chương]: [số lượng câu hỏi (tối đa 25)]```  
+    - **Tạo số lượng câu hỏi cho tiêu đề chính bất kì:** ```heading: [tên tiêu đề chính]: [số lượng câu hỏi (tối đa 15)]```  
+    - **Tạo số lượng câu hỏi cho tiêu đề phụ bất kì:** ```subheading: [tên tiêu đề phụ]: [số lượng câu hỏi (tối đa 10)]```  
+    - **Tạo số lượng câu hỏi cho tiểu mục bất kì:** ```subsubheading: [tên tiểu mục]: [số lượng câu hỏi (tối đa 5)]```
+
+
 
 
 
