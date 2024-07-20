@@ -1,0 +1,7 @@
+Flask
+flask-cors
+openai==0.28
+pinecone-client
+tiktoken
+elasticsearch
+openpyxl
