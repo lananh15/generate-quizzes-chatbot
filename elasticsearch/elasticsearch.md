@@ -1,4 +1,4 @@
-## Tải và sử dụng Elasticsearch với Docker Desktop
+## :arrow_down: Tải và sử dụng Elasticsearch với Docker Desktop
 
 **1. Tải Elasticsearch**  
 Mở Command Prompt:
@@ -12,7 +12,7 @@ Về sau chỉ cần vào Docker Desktop -> Chọn tab Containers và Run elasti
 
 **Lưu ý:** Nếu đã tải Elasticsearch và chạy container nhưng không truy cập được http://localhost:9200/ thì tìm và mở file **elasticsearch.yml** trên máy, những chỗ nào có "true" thì đổi thành "false" rồi truy cập lại localhost. Mỗi lần chạy elasticsearch container cần phải chờ khởi động khoảng 30 giây sau đó truy cập vào localhost sẽ ổn định hơn.
 
-## Tải và sử dụng Kibana với Docker Desktop (nếu cần)
+## :arrow_down: Tải và sử dụng Kibana với Docker Desktop (nếu cần)
 
 **1. Tải Kibana**    
 Mở Docker Desktop:
