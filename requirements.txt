@@ -3,4 +3,5 @@ flask-cors
 openai==0.28
 pinecone-client
 tiktoken
-neo4j
+elasticsearch
+openpyxl

@@ -3,6 +3,7 @@ from pinecone import Pinecone, ServerlessSpec
 import hashlib
 import json
 import logging
+import os
 
 # Khởi tạo OpenAI
 openai.api_key = 'sk-proj-e3BgNgIvICywLYluJyeUT3BlbkFJenYTISe35HiZEiki9Gz3'
@@ -25,8 +26,16 @@ if index_name not in pc.list_indexes().names():
 
 index = pc.Index(index_name)
 
+# Định nghĩa đường dẫn thư mục chứa script
+script_dir = os.path.dirname(__file__)
+
+# Lên một cấp thư mục và kết hợp với tên file 'qtda.json'
+json_path = os.path.join(script_dir, '..', 'qtda.json')
+
+# Chuẩn hóa đường dẫn để loại bỏ các thành phần dư thừa (nếu có)
+json_path = os.path.abspath(json_path)
 # Load file JSON
-with open('qtda.json', 'r', encoding='utf-8') as f:
+with open(json_path, 'r', encoding='utf-8') as f:
     data = json.load(f)
 
 def get_embeddings(text):
