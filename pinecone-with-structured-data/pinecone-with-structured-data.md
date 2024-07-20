@@ -30,7 +30,7 @@
                 region='us-east-1'
             )
         )
-    ```
+    ```  
   - Ngoài ra, cũng cần thay đổi **api_key** và **index** trong đoạn code dưới đây của file **app.py**  
   ```
     if __name__ == '__main__':
