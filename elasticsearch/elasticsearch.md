@@ -12,7 +12,7 @@ Về sau chỉ cần vào Docker Desktop -> Chọn tab Containers và Run elasti
 
 **Lưu ý:** Nếu đã tải Elasticsearch và chạy container nhưng không truy cập được http://localhost:9200/ thì tìm và mở file **elasticsearch.yml** trên máy, những chỗ nào có "true" thì đổi thành "false" rồi truy cập lại localhost. Mỗi lần chạy elasticsearch container cần phải chờ khởi động khoảng 30 giây sau đó truy cập vào localhost sẽ ổn định hơn.
 
-## Tải và sử dụng Kibana với Docker Desktop
+## Tải và sử dụng Kibana với Docker Desktop (nếu cần)
 
 **1. Tải Kibana**    
 Mở Docker Desktop:
@@ -33,10 +33,10 @@ Bật tab Dev Tools trên giao diện của Kibana và có thể thử 1 số l�
 
   **Lưu ý:** Bạn cũng có thể dùng code Python để thực hiện các chức năng trên nếu không muốn sử dụng Kibana.  
 
-## Dùng chatbot hỗ trợ sinh câu hỏi (sử dụng elasticsearch)
+## :computer: Dùng chatbot hỗ trợ sinh câu hỏi (sử dụng elasticsearch)
 **1. Lưu cấu trúc dữ liệu từ file .json lên Elasticsearch**  
   - Khởi động elasticsearch container.
-  - Run file **index_to_elasticsearch.py** để có thể lưu dữ liệu từ file **qtda.json** lên elasticsearch.  
+  - Run file **index_to_elasticsearch.py** để có thể lưu dữ liệu từ file **qtda.json** lên Elasticsearch, chatbot sẽ sử dụng dữ liệu trên Elasticsearch để tạo câu hỏi cho môn học.  
 
 **2. Sử dụng chatbot**  
   - Run file **app.py** và truy cập vào http://127.0.0.1:5000/ để dùng chatbot ở localhost.
