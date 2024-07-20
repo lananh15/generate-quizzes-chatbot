@@ -14,7 +14,7 @@
 
 **Lưu ý:** Bạn cũng có thể thay đổi API key, tên index khác từ tài khoản Pinecone và sử dụng openai_api_key của riêng bạn.  
   - Để làm được, bạn cần phải có tài khoản trên https://www.pinecone.io/ và tạo index. Sau đó thay đổi các giá trị **api_key**, **index_name**, **dimension** (nếu dùng mô hình text-embedding-ada-002 của openAI thì giữ nguyên 1536), **cloud** và **region** trong đoạn code dưới đây của file **save_structured_data_to_pinecone.py** sao cho phù hợp.
-  ```
+  ```python
     # Tạo đối tượng Pinecone
     pc = Pinecone(api_key="020a8257-5dd3-41f3-a710-53d7c6fac5d9")
 
@@ -31,9 +31,9 @@
             )
         ) 
   ```  
-  
+
   - Ngoài ra, cũng cần thay đổi **api_key** và **index** trong đoạn code dưới đây của file **app.py**  
-  ```
+  ```python
     if __name__ == '__main__':
     openai_handler = PineconeOpenAIHandler("sk-proj-e3BgNgIvICywLYluJyeUT3BlbkFJenYTISe35HiZEiki9Gz3")
     pc = Pinecone(api_key="020a8257-5dd3-41f3-a710-53d7c6fac5d9")
