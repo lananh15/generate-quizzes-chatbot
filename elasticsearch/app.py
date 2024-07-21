@@ -51,6 +51,30 @@ class ElasticsearchQuizzSearchApp(QuizzSearchAppBase, ElasticsearchOpenAIHandler
         
         return chapter_structure
 
+    def _handle_chapter_structure(self):
+        chapter_structure = self.get_chapter_structure()
+        response = "Các chương được hỗ trợ:\n"
+        for idx, (chapter_title, chapter_data) in enumerate(chapter_structure.items(), start=1):
+            response += f"\n{idx}. {chapter_title}"
+            for heading_title, heading_data in chapter_data['headings'].items():
+                response += f"- {heading_title}"
+                for subheading_title, subsubheadings in heading_data['subheadings'].items():
+                    response += f"+ {subheading_title}"
+                    for subsubheading in subsubheadings:
+                        response += f"* {subsubheading}"
+        response += "\n\n(trong đó số thứ tự là chương - là tiêu đề chính + là tiêu đề phụ * là tiểu mục)"
+        response += "\n\nNhập <code>`chapter: [tên chương]: [số lượng câu hỏi (tối đa 25)]`</code> để tạo số lượng câu hỏi cho chương."
+        response += "\n<code>`heading: [tên tiêu đề chính]: [số lượng câu hỏi (tối đa 15)]`</code> để tạo số lượng câu hỏi cho tiêu đề chính."
+        response += "\n<code>`subheading: [tên tiêu đề phụ]: [số lượng câu hỏi (tối đa 10)]`</code> để tạo số lượng câu hỏi cho tiêu đề phụ."
+        response += "\n<code>`subsubheading: [tên tiểu mục]: [số lượng câu hỏi (tối đa 5)]`</code> để tạo số lượng câu hỏi cho tiểu mục."
+
+        response = response.replace("\n", "<br>")
+        response = response.replace("\n", "<br>")
+        response = response.replace("- ", "<br>&nbsp;&nbsp;- ")
+        response = response.replace("+ ", "<br>&nbsp;&nbsp;&nbsp;&nbsp;+ ")
+        response = response.replace("* ", "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* ")    
+        return jsonify({"response": response})
+
     # Lưu kết quả truy vấn vào file excel
     def save_search_result(self, keyword, search_results):
         base_filename = "search_results_elasticsearch.xlsx"
@@ -208,7 +232,7 @@ class ElasticsearchQuizzSearchApp(QuizzSearchAppBase, ElasticsearchOpenAIHandler
         return search_nested(source, keyword)
     
 if __name__ == '__main__':
-    openai_handler = ElasticsearchOpenAIHandler("sk-proj-e3BgNgIvICywLYluJyeUT3BlbkFJenYTISe35HiZEiki9Gz3")
+    openai_handler = ElasticsearchOpenAIHandler("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")
     es_client = Elasticsearch(['http://localhost:9200'])
     app = ElasticsearchQuizzSearchApp(openai_handler, es_client)
     app.run()

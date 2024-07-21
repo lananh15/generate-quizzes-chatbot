@@ -6,7 +6,7 @@ import os
 es = Elasticsearch(['http://localhost:9200'])
 
 script_dir = os.path.dirname(__file__)  # Thư mục chứa script Python hiện tại
-json_file = os.path.join(script_dir, '..', 'qtda.json')
+json_file = os.path.join(script_dir, '..', 'data', 'qtda.json')
 json_file = os.path.abspath(json_file)
 
 # Đọc dữ liệu từ file JSON

@@ -1,0 +1,75 @@
+import os
+from pinecone import Pinecone, ServerlessSpec
+import openai
+from typing import List
+
+# Khởi tạo Pinecone và OpenAI
+pc = Pinecone(api_key="020a8257-5dd3-41f3-a710-53d7c6fac5d9")
+
+# Kết nối đến index đã tồn tại hoặc tạo mới nếu chưa tồn tại
+index_name = "generate-quizz-with-raw-data"
+if index_name not in pc.list_indexes().names():
+    pc.create_index(
+        name=index_name,
+        dimension=1536,  # Đảm bảo dimension khớp với model embedding bạn sử dụng
+        metric='euclidean',
+        spec=ServerlessSpec(
+            cloud='aws',
+            region='us-east-1'
+        )
+    )
+
+# Kết nối đến index
+index = pc.Index(index_name)
+
+openai.api_key = "sk-proj-e3BgNgIvICywLYluJyeUT3BlbkFJenYTISe35HiZEiki9Gz3"
+
+def read_file(file_path: str) -> str:
+    """Đọc nội dung từ tệp văn bản."""
+    with open(file_path, 'r', encoding='utf-8') as file:
+        return file.read()
+
+def split_into_chunks(text: str) -> List[str]:
+    """Chia văn bản thành các chunk nhỏ hơn dựa trên dấu phân tách '\n\n'."""
+    chunks = text.split('\n\n')
+    chunks = [chunk.strip() for chunk in chunks if chunk.strip()]
+    return chunks
+
+def create_embedding(text: str) -> List[float]:
+    """Tạo embedding cho văn bản sử dụng OpenAI."""
+    response = openai.Embedding.create(
+        input=text,
+        model="text-embedding-ada-002"
+    )
+    return response['data'][0]['embedding']
+
+def upload_to_pinecone(chunks: List[str]):
+    """Tải các chunk lên Pinecone."""
+    vectors = []
+    for i, chunk in enumerate(chunks):
+        vector = create_embedding(chunk)
+        metadata = {
+            "text": chunk,
+        }
+        vectors.append((f"chunk_{i}", vector, metadata))
+    index.upsert(vectors)
+
+# Định nghĩa đường dẫn thư mục chứa script
+script_dir = os.path.dirname(__file__)
+
+# Lên một cấp thư mục và kết hợp với tên file 'qtda_raw.txt'
+file_path = os.path.join(script_dir, '..', 'data', 'qtda_raw.txt')
+
+# Chuẩn hóa đường dẫn để loại bỏ các thành phần dư thừa (nếu có)
+file_path = os.path.abspath(file_path)
+
+# Đọc file
+raw_text = read_file(file_path)
+
+# Chia thành các chunk
+chunks = split_into_chunks(raw_text)
+
+# Upload lên Pinecone
+upload_to_pinecone(chunks)
+
+print(f"Đã xử lý và upload {len(chunks)} chunks lên Pinecone.")

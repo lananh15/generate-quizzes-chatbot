@@ -12,6 +12,7 @@ class OpenAIHandlerBase:
         self.openai = openai
         self.openai.api_key = api_key
 
+    # Khởi tạo cuộc trò chuyện với OpenAI
     def _call_openai_api(self, prompt: str) -> str:
         response = self.openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -26,12 +27,14 @@ class OpenAIHandlerBase:
         )
         return response.choices[0].message['content']
 
+    # Gửi thẳng nội dung lên openai mà không cần chia chunk vì nội dung nhỏ hơn 3800 tokens
     def _generate_questions_direct(self, content: str, num_questions: int) -> List[str]:
         prompt = self._build_prompt(num_questions, content, [])
         response = self._call_openai_api(prompt)
         questions = response.split('\n\n')
         return [q.strip() for q in questions if q.strip().startswith("Câu hỏi:")]
 
+    # Xây dựng câu prompt để sinh ra quizz
     def _build_prompt(self, num_questions: int, content: str, keywords: List[str]) -> str:
         return f"""Tạo {num_questions} câu hỏi trắc nghiệm dựa trên nội dung sau. Tuân thủ các quy tắc sau:
         1. Mỗi câu hỏi bắt đầu bằng "Câu hỏi:" (không có số).
@@ -56,6 +59,7 @@ class OpenAIHandlerBase:
         Đáp án: B
         """
     
+    # Đếm số lượng token trong nội dung
     def _count_tokens(self, text: str) -> int:
         encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
         return len(encoding.encode(text))
@@ -73,6 +77,7 @@ class QuizzSearchAppBase:
     def index(self):
         return render_template('index.html')
 
+    # Xử lý các cú pháp trong chatbot
     def chat(self):
         message = request.form['message']
 
@@ -86,33 +91,16 @@ class QuizzSearchAppBase:
             return self._handle_questions(message, 'subheading', 10)
         elif message.lower().startswith('subsubheading:'):
             return self._handle_questions(message, 'subsubheading', 5)
+        # Chỉ dùng cho pinecone với raw data
+        elif message.lower().startswith('keyword:'):
+            return self._handle_questions_with_keyword(message,5)
+        
         else:
             return jsonify({"response": "Cú pháp không hợp lệ. Vui lòng thử lại."})
 
-    
+    # Tìm và in ra các chương được hỗ trợ
     def _handle_chapter_structure(self):
-        chapter_structure = self.get_chapter_structure()
-        response = "Các chương được hỗ trợ:\n"
-        for idx, (chapter_title, chapter_data) in enumerate(chapter_structure.items(), start=1):
-            response += f"\n{idx}. {chapter_title}"
-            for heading_title, heading_data in chapter_data['headings'].items():
-                response += f"- {heading_title}"
-                for subheading_title, subsubheadings in heading_data['subheadings'].items():
-                    response += f"+ {subheading_title}"
-                    for subsubheading in subsubheadings:
-                        response += f"* {subsubheading}"
-        response += "\n\n(trong đó số thứ tự là chương - là tiêu đề chính + là tiêu đề phụ * là tiểu mục)"
-        response += "\n\nNhập <code>`chapter: [tên chương]: [số lượng câu hỏi (tối đa 25)]`</code> để tạo số lượng câu hỏi cho chương."
-        response += "\n<code>`heading: [tên tiêu đề chính]: [số lượng câu hỏi (tối đa 15)]`</code> để tạo số lượng câu hỏi cho tiêu đề chính."
-        response += "\n<code>`subheading: [tên tiêu đề phụ]: [số lượng câu hỏi (tối đa 10)]`</code> để tạo số lượng câu hỏi cho tiêu đề phụ."
-        response += "\n<code>`subsubheading: [tên tiểu mục]: [số lượng câu hỏi (tối đa 5)]`</code> để tạo số lượng câu hỏi cho tiểu mục."
-
-        response = response.replace("\n", "<br>")
-        response = response.replace("\n", "<br>")
-        response = response.replace("- ", "<br>&nbsp;&nbsp;- ")
-        response = response.replace("+ ", "<br>&nbsp;&nbsp;&nbsp;&nbsp;+ ")
-        response = response.replace("* ", "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* ")    
-        return jsonify({"response": response})
+        raise NotImplementedError
 
     def find_excel_file(self, filename):
         for root, dirs, files in os.walk('/'):  # Bắt đầu tìm từ thư mục gốc
@@ -120,6 +108,7 @@ class QuizzSearchAppBase:
                 return os.path.join(root, filename)
         return None
 
+    # Xử lý các cú pháp search của người dùng
     def _handle_questions(self, message, question_type, max_questions):
         raise NotImplementedError
     

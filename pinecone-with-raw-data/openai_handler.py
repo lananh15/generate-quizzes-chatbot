@@ -6,7 +6,7 @@ class PineconeOpenAIHandler(OpenAIHandlerBase):
     # Tạo ra danh sách các câu hỏi dựa trên nội dung đầu vào
     def generate_questions(self, pinecone_results: List[Dict], num_questions: int) -> List[str]:
         all_content = self._combine_content(pinecone_results)
-        
+        print(all_content)
         if self._count_tokens(all_content) <= 3800:
             return self._generate_questions_direct(all_content, num_questions)
         else:
@@ -33,7 +33,7 @@ class PineconeOpenAIHandler(OpenAIHandlerBase):
     # Gửi nội dung từ các chunk để sinh câu hỏi
     def _generate_questions_for_chunk(self, content: str, num_questions: int, metadata: Dict[str, str]) -> List[str]:
         context = self._build_context(metadata, content)
-        prompt = self._build_prompt(num_questions, content, metadata.get('keywords', []))
+        prompt = self._build_prompt(num_questions, context)
         response = self._call_openai_api(prompt)
         questions = response.split('\n\n')
         return [q.strip() for q in questions if q.strip().startswith("Câu hỏi:")]
@@ -43,22 +43,17 @@ class PineconeOpenAIHandler(OpenAIHandlerBase):
         chunks = []
         for result in pinecone_results:
             metadata = result['metadata']
-            chunk_metadata = {k: metadata.get(k, '') for k in ['chapter_title', 'heading_title', 'subheading_title', 'subsubheading_title', 'keywords']}
+            content = metadata.get('text', '')
             
-            if 'chapter_title' in metadata:
-                chapter_title = metadata['chapter_title']
-                for content_type in ['heading', 'subheading', 'subsubheading']:
-                    title_key = f'{content_type}_title'
-                    content_key = f'{content_type}_content'
-                    if title_key in metadata and content_key in metadata:
-                        chunks.append((f"Chapter: {chapter_title}\n{content_type.capitalize()}: {metadata[title_key]}\nContent: {metadata[content_key]}", chunk_metadata))
+            chunk_metadata = {k: metadata.get(k, '') for k in ['chapter_title', 'heading_title', 'subheading_title', 'subsubheading_title', 'keywords']}
+            chunks.append((content, chunk_metadata))
         
         return chunks
 
     # Tạo một chuỗi văn bản mô tả ngữ cảnh dựa trên các thông tin từ metadata và nội dung đầu vào
     def _build_context(self, metadata: Dict[str, str], content: str) -> str:
         context = f"Chapter: {metadata.get('chapter_title', '')}\n"
-        for title_type in ['heading', 'subheading']:
+        for title_type in ['heading', 'subheading', 'subsubheading']:
             if metadata.get(f'{title_type}_title'):
                 context += f"{title_type.capitalize()}: {metadata[f'{title_type}_title']}\n"
         context += f"Keywords: {', '.join(metadata.get('keywords', []))}\n"
@@ -70,13 +65,6 @@ class PineconeOpenAIHandler(OpenAIHandlerBase):
         contents = []
         for result in pinecone_results:
             metadata = result['metadata']
-            content = f"Chapter: {metadata.get('chapter_title', '')}\n"
-            if 'heading_title' in metadata:
-                content += f"Heading: {metadata['heading_title']}\n"
-            if 'subheading_title' in metadata:
-                content += f"Subheading: {metadata['subheading_title']}\n"
-            if 'subsubheading_title' in metadata:
-                content += f"Subsubheading: {metadata['subsubheading_title']}\n"
-            content += f"Content: {metadata.get('content', '')}\n\n"
+            content = metadata.get('text', '')
             contents.append(content)
-        return "\n".join(contents)
+        return "\n\n".join(contents)

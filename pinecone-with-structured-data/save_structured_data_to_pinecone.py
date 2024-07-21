@@ -30,7 +30,7 @@ index = pc.Index(index_name)
 script_dir = os.path.dirname(__file__)
 
 # Lên một cấp thư mục và kết hợp với tên file 'qtda.json'
-json_path = os.path.join(script_dir, '..', 'qtda.json')
+json_path = os.path.join(script_dir, '..', 'data', 'qtda.json')
 
 # Chuẩn hóa đường dẫn để loại bỏ các thành phần dư thừa (nếu có)
 json_path = os.path.abspath(json_path)

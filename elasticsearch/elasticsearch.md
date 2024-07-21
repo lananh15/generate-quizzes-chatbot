@@ -34,18 +34,20 @@ Bật tab Dev Tools trên giao diện của Kibana và có thể thử 1 số l�
   **Lưu ý:** Bạn cũng có thể dùng code Python để thực hiện các chức năng trên nếu không muốn sử dụng Kibana.  
 
 ## :computer: Dùng chatbot hỗ trợ sinh câu hỏi (sử dụng elasticsearch)
-**1. Lưu cấu trúc dữ liệu từ file .json lên Elasticsearch**  
+**1. Lưu cấu trúc dữ liệu từ file qtda.json lên Elasticsearch**  
   - Khởi động elasticsearch container.
-  - Run file **index_to_elasticsearch.py** để có thể lưu dữ liệu từ file **qtda.json** lên Elasticsearch, chatbot sẽ sử dụng dữ liệu trên Elasticsearch để tạo câu hỏi cho môn học.  
+  - Run file **index_to_elasticsearch.py** để có thể lưu dữ liệu từ file **qtda.json** trong thư mục **data** lên Elasticsearch, chatbot sẽ sử dụng dữ liệu trên Elasticsearch để tạo câu hỏi cho môn học.  
 
 **2. Sử dụng chatbot**  
   - Run file **app.py** và truy cập vào http://127.0.0.1:5000/ để dùng chatbot ở localhost.
   - Các cú pháp để dùng chatbot:  
-    - **Xem cấu trúc chương, tiêu đề chính, tiêu đề phụ, tiểu mục của môn học mà chúng tôi hỗ trợ:** ```chương hỗ trợ```
+    - **Xem cấu trúc chương, tiêu đề chính, tiêu đề phụ, tiểu mục của môn học mà chatbot hỗ trợ:** ```chương hỗ trợ```
     - **Tạo số lượng câu hỏi cho chương bất kì:** ```chapter: [tên chương]: [số lượng câu hỏi (tối đa 25)]```  
     - **Tạo số lượng câu hỏi cho tiêu đề chính bất kì:** ```heading: [tên tiêu đề chính]: [số lượng câu hỏi (tối đa 15)]```  
     - **Tạo số lượng câu hỏi cho tiêu đề phụ bất kì:** ```subheading: [tên tiêu đề phụ]: [số lượng câu hỏi (tối đa 10)]```  
-    - **Tạo số lượng câu hỏi cho tiểu mục bất kì:** ```subsubheading: [tên tiểu mục]: [số lượng câu hỏi (tối đa 5)]```
+    - **Tạo số lượng câu hỏi cho tiểu mục bất kì:** ```subsubheading: [tên tiểu mục]: [số lượng câu hỏi (tối đa 5)]```  
+  
+  **Lưu ý:** Nếu câu hỏi sinh ra của 1 chương bị thiếu nội dung, không bao quát được chương thì vui lòng dùng cú pháp tạo câu hỏi cho các phần nhỏ hơn trong chương đó rồi tổng hợp lại các câu hỏi thì sẽ bao quát hơn.
 
 
 

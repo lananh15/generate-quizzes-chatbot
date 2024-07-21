@@ -5,7 +5,7 @@ import random
 class ElasticsearchOpenAIHandler(OpenAIHandlerBase):
     # Tạo ra danh sách các câu hỏi dựa trên nội dung đầu vào
     def generate_questions(self, content: str, num_questions: int) -> List[str]:
-        if self._count_tokens(content) <= 3900:
+        if self._count_tokens(content) <= 3800:
             return self._generate_questions_direct(content, num_questions)
         else:
             return self._generate_questions_chunked(content, num_questions)
