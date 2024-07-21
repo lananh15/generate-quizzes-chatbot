@@ -26,7 +26,7 @@
   - Ngoài ra, cũng cần thay đổi **api_key** và **index** trong đoạn code dưới đây của file **app.py**  
   ```python
     if __name__ == '__main__':
-    openai_handler = PineconeOpenAIHandler("sk-proj-e3BgNgIvICywLYluJyeUT3BlbkFJenYTISe35HiZEiki9Gz3")
+    openai_handler = PineconeOpenAIHandler("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")
     pc = Pinecone(api_key="020a8257-5dd3-41f3-a710-53d7c6fac5d9")
     index = pc.Index("generate-quizz")
     app = PineconeQuizzSearchApp(openai_handler, index)

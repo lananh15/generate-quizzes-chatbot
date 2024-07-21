@@ -26,7 +26,7 @@
   - Ngoài ra, cũng cần thay đổi **api_key** và **index** trong đoạn code dưới đây của file **app.py**  
   ```python
     if __name__ == '__main__':
-    openai_handler = PineconeOpenAIHandler("sk-proj-e3BgNgIvICywLYluJyeUT3BlbkFJenYTISe35HiZEiki9Gz3")
+    openai_handler = PineconeOpenAIHandler("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")
     pc = Pinecone(api_key="020a8257-5dd3-41f3-a710-53d7c6fac5d9")
     index = pc.Index("generate-quizz")
     app = PineconeQuizzSearchApp(openai_handler, index)
@@ -38,7 +38,7 @@
   - Các cú pháp để dùng chatbot:  
     - **Xem các chương mà chatbot hỗ trợ:** ```chương hỗ trợ```
     - **Tạo số lượng câu hỏi cho keyword bất kì:** ```keyword: [keyword]: [số lượng câu hỏi (tối đa 5)]```  
-  **Lưu ý:** Vì một số lý do nên hiện tại chatbot chỉ hỗ trợ sinh 5 câu hỏi cho mỗi keyword, vui lòng sử dụng nhiều keyword khác qua nhiều lần chat để sinh được đa dạng câu hỏi hơn.
+  **Lưu ý:** Vì một số lý do nên hiện tại chatbot chỉ hỗ trợ sinh 10 câu hỏi cho mỗi keyword, vui lòng sử dụng nhiều keyword khác qua nhiều lần chat để sinh được đa dạng câu hỏi hơn.
 
 
 
