@@ -93,7 +93,7 @@ class QuizzSearchAppBase:
             return self._handle_questions(message, 'subsubheading', 5)
         # Chỉ dùng cho pinecone với raw data
         elif message.lower().startswith('keyword:'):
-            return self._handle_questions_with_keyword(message,10)
+            return self._handle_questions_with_keyword(message,20)
         
         else:
             return jsonify({"response": "Cú pháp không hợp lệ. Vui lòng thử lại."})

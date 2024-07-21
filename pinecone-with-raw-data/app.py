@@ -16,7 +16,7 @@ class PineconeQuizzSearchApp(QuizzSearchAppBase, PineconeOpenAIHandler):
     
     def _handle_chapter_structure(self):
         response = "1. Tổng quan về quản lý dự án\n2. Cơ cấu quản lý dự án\n3. Quy trình quản lý dự án\n4. Quản lý chất lượng"
-        response += "\n\nNhập <code>`keyword: [keyword]: [số lượng câu hỏi (tối đa 10)]`</code> để tạo số lượng câu hỏi cho keyword bạn cần."
+        response += "\n\nNhập <code>`keyword: [keyword]: [số lượng câu hỏi (tối đa 20)]`</code> để tạo số lượng câu hỏi cho keyword bạn cần."
         return jsonify({"response": response})
     
     # Lưu kết quả truy vấn vào file excel
