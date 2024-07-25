@@ -2,16 +2,16 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from common.base_app import QuizzSearchAppBase
-from openai_handler import ElasticsearchOpenAIHandler
+from common.handlers.llm_handler_base import LLMHandlerBase
+from content_processor import ContentProcessor
 from elasticsearch import Elasticsearch
 from typing import List, Dict, Tuple
-import os
 from openpyxl import Workbook, load_workbook
 from flask import jsonify
 
-class ElasticsearchQuizzSearchApp(QuizzSearchAppBase, ElasticsearchOpenAIHandler):
-    def __init__(self, openai_handler, es_client):
-        super().__init__(openai_handler)
+class ElasticsearchQuizzSearchApp(QuizzSearchAppBase, LLMHandlerBase):
+    def __init__(self, llm_handler, es_client):
+        super().__init__(llm_handler)
         self.es_client = es_client
         self.index_name = 'qtda'
 
@@ -67,7 +67,7 @@ class ElasticsearchQuizzSearchApp(QuizzSearchAppBase, ElasticsearchOpenAIHandler
         response += "\n<code>`heading: [tên tiêu đề chính]: [số lượng câu hỏi (tối đa 15)]`</code> để tạo số lượng câu hỏi cho tiêu đề chính."
         response += "\n<code>`subheading: [tên tiêu đề phụ]: [số lượng câu hỏi (tối đa 10)]`</code> để tạo số lượng câu hỏi cho tiêu đề phụ."
         response += "\n<code>`subsubheading: [tên tiểu mục]: [số lượng câu hỏi (tối đa 5)]`</code> để tạo số lượng câu hỏi cho tiểu mục."
-
+        
         response = response.replace("\n", "<br>")
         response = response.replace("\n", "<br>")
         response = response.replace("- ", "<br>&nbsp;&nbsp;- ")
@@ -177,7 +177,7 @@ class ElasticsearchQuizzSearchApp(QuizzSearchAppBase, ElasticsearchOpenAIHandler
                 return jsonify({"response": f"Không tìm thấy nội dung cho {question_type} '{keyword}'."})
             
             content = search_results[0]['content']
-            all_questions = self.openai_handler.generate_questions(content, num_questions)
+            all_questions = self.llm_handler.generate_questions(content, num_questions)
             
             response = f"{num_questions} câu hỏi của {question_type} '{keyword}':\n\n"
             for i, question in enumerate(all_questions, 1):
@@ -232,7 +232,14 @@ class ElasticsearchQuizzSearchApp(QuizzSearchAppBase, ElasticsearchOpenAIHandler
         return search_nested(source, keyword)
     
 if __name__ == '__main__':
-    openai_handler = ElasticsearchOpenAIHandler("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")
+    
+    OPENAI_API_KEY = "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"
+    GOOGLE_API_KEY = "AIzaSyAYxPv1wiS66B0qjiTO59R6t1V5j27dcrY"
+    PINECONE_API_KEY = "020a8257-5dd3-41f3-a710-53d7c6fac5d9"
+    ANTHROPIC_API_KEY = "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"
+
+    llm_handler = ContentProcessor(OPENAI_API_KEY, GOOGLE_API_KEY, ANTHROPIC_API_KEY)
+
     es_client = Elasticsearch(['http://localhost:9200'])
-    app = ElasticsearchQuizzSearchApp(openai_handler, es_client)
+    app = ElasticsearchQuizzSearchApp(llm_handler, es_client)
     app.run()

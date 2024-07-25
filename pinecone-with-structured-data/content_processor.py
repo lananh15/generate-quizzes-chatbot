@@ -1,12 +1,12 @@
-from common.base_app import OpenAIHandlerBase
+from common.handlers.llm_handler_base import LLMHandlerBase
 from typing import List, Dict, Tuple
 import random
 
-class PineconeOpenAIHandler(OpenAIHandlerBase):
+class ContentProcessor(LLMHandlerBase):
     # Tạo ra danh sách các câu hỏi dựa trên nội dung đầu vào
     def generate_questions(self, pinecone_results: List[Dict], num_questions: int) -> List[str]:
         all_content = self._combine_content(pinecone_results)
-        
+        print(all_content)
         if self._count_tokens(all_content) <= 3800:
             return self._generate_questions_direct(all_content, num_questions)
         else:
@@ -34,8 +34,10 @@ class PineconeOpenAIHandler(OpenAIHandlerBase):
     def _generate_questions_for_chunk(self, content: str, num_questions: int, metadata: Dict[str, str]) -> List[str]:
         context = self._build_context(metadata, content)
         prompt = self._build_prompt(num_questions, content, metadata.get('keywords', []))
-        response = self._call_openai_api(prompt)
-        questions = response.split('\n\n')
+        llm = self.get_llm()
+        response = llm.invoke(prompt)
+        print(f"\n\nModel được dùng: {llm}")
+        questions = response.content.split('\n\n')
         return [q.strip() for q in questions if q.strip().startswith("Câu hỏi:")]
 
     # Chia nội dung ra thành các chunk nếu nội dung quá dài

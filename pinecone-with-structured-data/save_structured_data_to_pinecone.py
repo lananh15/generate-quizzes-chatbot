@@ -1,4 +1,4 @@
-import openai
+from openai import OpenAI
 from pinecone import Pinecone, ServerlessSpec
 import hashlib
 import json
@@ -6,7 +6,8 @@ import logging
 import os
 
 # Khởi tạo OpenAI
-openai.api_key = 'sk-proj-e3BgNgIvICywLYluJyeUT3BlbkFJenYTISe35HiZEiki9Gz3'
+OPENAI_API_KEY = "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"
+openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
 # Tạo đối tượng Pinecone
 pc = Pinecone(api_key="020a8257-5dd3-41f3-a710-53d7c6fac5d9")
@@ -17,7 +18,7 @@ if index_name not in pc.list_indexes().names():
     pc.create_index(
         name=index_name,
         dimension=1536,  # Đảm bảo dimension khớp với model embedding bạn sử dụng
-        metric='euclidean',
+        metric='cosine',
         spec=ServerlessSpec(
             cloud='aws',
             region='us-east-1'
@@ -39,11 +40,11 @@ with open(json_path, 'r', encoding='utf-8') as f:
     data = json.load(f)
 
 def get_embeddings(text):
-    response = openai.Embedding.create(
-        model="text-embedding-ada-002",
-        input=text
+    response = openai_client.embeddings.create(
+        input=text,
+        model="text-embedding-ada-002"
     )
-    return response['data'][0]['embedding']
+    return response.data[0].embedding
 
 # Function to upsert data to Pinecone
 def upsert_data(vector_id, embedding, metadata):

@@ -2,28 +2,32 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from common.base_app import QuizzSearchAppBase
-from openai_handler import PineconeOpenAIHandler
+from common.handlers.llm_handler_base import LLMHandlerBase
+from content_processor import ContentProcessor
 from typing import List, Dict
-import os
 from openpyxl import Workbook, load_workbook
 from flask import jsonify
 from pinecone import Pinecone
+from openai import OpenAI
 
-class PineconeQuizzSearchApp(QuizzSearchAppBase, PineconeOpenAIHandler):
-    def __init__(self, openai_handler, pinecone_index):
-        super().__init__(openai_handler)
+class PineconeQuizzSearchApp(QuizzSearchAppBase, LLMHandlerBase):
+    def __init__(self, llm_handler, pinecone_index, openai_client):
+        super().__init__(llm_handler)
         self.pinecone_handler = pinecone_index
+        self.openai_client = openai_client
 
     # Lấy cấu trúc các chương, tiêu đề chính, tiêu đề phụ, tiểu mục
     def get_chapter_structure(self):
-        query_embedding = self.openai_handler.openai.Embedding.create(
+        response = self.openai_client.embeddings.create(
             input="chapter_title",
-            model="text-embedding-ada-002"
-        )['data'][0]['embedding']
-        
+            model="text-embedding-ada-002"  # Hoặc model phù hợp khác
+        )
+        query_embedding = response.data[0].embedding
+
+        # Truy vấn Pinecone
         result = self.pinecone_handler.query(
             vector=query_embedding,
-            top_k=100, 
+            top_k=100,
             include_metadata=True
         )
         
@@ -68,6 +72,7 @@ class PineconeQuizzSearchApp(QuizzSearchAppBase, PineconeOpenAIHandler):
         response += "\n<code>`subheading: [tên tiêu đề phụ]: [số lượng câu hỏi (tối đa 10)]`</code> để tạo số lượng câu hỏi cho tiêu đề phụ."
         response += "\n<code>`subsubheading: [tên tiểu mục]: [số lượng câu hỏi (tối đa 5)]`</code> để tạo số lượng câu hỏi cho tiểu mục."
 
+        response += "\n\nNhập <code>`mode: openai`</code> hoặc <code>`mode: gemini`</code> để chọn chế độ và <code>`mode`</code> để xem chế độ hiện tại."
         response = response.replace("\n", "<br>")
         response = response.replace("\n", "<br>")
         response = response.replace("- ", "<br>&nbsp;&nbsp;- ")
@@ -145,11 +150,13 @@ class PineconeQuizzSearchApp(QuizzSearchAppBase, PineconeOpenAIHandler):
             "subheading": 15
         }.get(type, 5)
 
-        query_embedding = self.openai_handler.openai.Embedding.create(
+        response = self.openai_client.embeddings.create(
             input=query,
-            model="text-embedding-ada-002"
-        )['data'][0]['embedding']
-            
+            model="text-embedding-ada-002"  # Hoặc model phù hợp khác
+        )
+        query_embedding = response.data[0].embedding
+
+        # Truy vấn Pinecone
         result = self.pinecone_handler.query(
             vector=query_embedding,
             top_k=number,
@@ -182,6 +189,7 @@ class PineconeQuizzSearchApp(QuizzSearchAppBase, PineconeOpenAIHandler):
                 return jsonify({"response": f"Số lượng câu hỏi phải là số dương và không quá {max_questions}."})
 
             pinecone_results = self.search_pinecone(keyword, question_type)
+            print(pinecone_results)
 
             # Tạo một hàm để kiểm tra từ khóa trong metadata
             def keyword_in_metadata(result, *keys):
@@ -207,7 +215,7 @@ class PineconeQuizzSearchApp(QuizzSearchAppBase, PineconeOpenAIHandler):
 
             results_to_use = matched_results if matched_results else pinecone_results
             print(results_to_use)
-            all_questions = self.openai_handler.generate_questions(results_to_use, num_questions)
+            all_questions = self.llm_handler.generate_questions(results_to_use, num_questions)
 
             response = f"{num_questions} câu hỏi của {question_type} '{keyword}':\n\n"
             response += '\n----------\n'.join(f"{i+1}. {q}" for i, q in enumerate(all_questions))
@@ -217,8 +225,16 @@ class PineconeQuizzSearchApp(QuizzSearchAppBase, PineconeOpenAIHandler):
             return jsonify({"response": "Số lượng câu hỏi phải là một số nguyên."})
     
 if __name__ == '__main__':
-    openai_handler = PineconeOpenAIHandler("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")
-    pc = Pinecone(api_key="020a8257-5dd3-41f3-a710-53d7c6fac5d9")
+    OPENAI_API_KEY = "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"
+    GOOGLE_API_KEY = "AIzaSyAYxPv1wiS66B0qjiTO59R6t1V5j27dcrY"
+    PINECONE_API_KEY = "020a8257-5dd3-41f3-a710-53d7c6fac5d9"
+    ANTHROPIC_API_KEY = "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"
+
+    llm_handler = ContentProcessor(OPENAI_API_KEY, GOOGLE_API_KEY, ANTHROPIC_API_KEY)
+    pc = Pinecone(api_key=PINECONE_API_KEY)
     index = pc.Index("generate-quizz")
-    app = PineconeQuizzSearchApp(openai_handler, index)
+
+    openai_client = OpenAI(api_key=OPENAI_API_KEY)
+
+    app = PineconeQuizzSearchApp(llm_handler, index, openai_client)
     app.run()

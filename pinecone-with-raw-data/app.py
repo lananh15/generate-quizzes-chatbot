@@ -2,17 +2,19 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from common.base_app import QuizzSearchAppBase
-from openai_handler import PineconeOpenAIHandler
+from common.handlers.llm_handler_base import LLMHandlerBase
+from content_processor import ContentProcessor
 from typing import List, Dict
-import os
 from openpyxl import Workbook, load_workbook
 from flask import jsonify
 from pinecone import Pinecone
+from openai import OpenAI
 
-class PineconeQuizzSearchApp(QuizzSearchAppBase, PineconeOpenAIHandler):
-    def __init__(self, openai_handler, pinecone_index):
-        super().__init__(openai_handler)
+class PineconeQuizzSearchApp(QuizzSearchAppBase, LLMHandlerBase):
+    def __init__(self, llm_handler, pinecone_index, openai_client):
+        super().__init__(llm_handler)
         self.pinecone_handler = pinecone_index
+        self.openai_client = openai_client
     
     def _handle_chapter_structure(self):
         response = "1. Tổng quan về quản lý dự án\n2. Cơ cấu quản lý dự án\n3. Quy trình quản lý dự án\n4. Quản lý chất lượng"
@@ -66,26 +68,25 @@ class PineconeQuizzSearchApp(QuizzSearchAppBase, PineconeOpenAIHandler):
     # Truy vấn vào pinecone để tìm các vector tương đồng với keyword
     def search_pinecone(self, query: str) -> List[Dict]:
         # Tạo embedding cho truy vấn
-        query_embedding = self.openai_handler.openai.Embedding.create(
+        response = self.openai_client.embeddings.create(
             input=query,
             model="text-embedding-ada-002"
-        )['data'][0]['embedding']
-        
+        )
+        query_embedding = response.data[0].embedding
+
         # Truy vấn Pinecone
         result = self.pinecone_handler.query(
             vector=query_embedding,
-            top_k=4,
+            top_k=10,
             include_metadata=True
         )
 
         # Sắp xếp kết quả theo điểm số, giữ nguyên metadata
         sorted_results = sorted(result['matches'], key=lambda x: x['score'], reverse=True)
-
         # Lưu kết quả vào file Excel
         self.save_to_excel(query, sorted_results)
 
         return sorted_results
-
 
     # Hàm xử lý và response    
     def _handle_questions_with_keyword(self, message, max_questions):
@@ -100,15 +101,13 @@ class PineconeQuizzSearchApp(QuizzSearchAppBase, PineconeOpenAIHandler):
             if not (0 < num_questions <= max_questions):
                 return jsonify({"response": f"Số lượng câu hỏi phải là số dương và không quá {max_questions}."})
 
-            # Tìm kiếm trong Pinecone
             pinecone_results = self.search_pinecone(keyword)
             print(pinecone_results)
-            # Lọc kết quả theo từ khóa trong metadata
             results_to_use = [result for result in pinecone_results if keyword.lower() in result['metadata']['text'].lower()]
             print(f"\nCác kết quả dùng để sinh quizz:\n")
             print(results_to_use)
-            # Tạo câu hỏi từ các kết quả đã lọc
-            all_questions = self.openai_handler.generate_questions(results_to_use, num_questions)
+
+            all_questions = self.llm_handler.generate_questions(results_to_use, num_questions)
 
             response = f"{num_questions} câu hỏi của '{keyword}':\n\n"
             response += '\n----------\n'.join(f"{i+1}. {q}" for i, q in enumerate(all_questions))
@@ -116,11 +115,18 @@ class PineconeQuizzSearchApp(QuizzSearchAppBase, PineconeOpenAIHandler):
             return jsonify({"response": response})
         except ValueError:
             return jsonify({"response": "Số lượng câu hỏi phải là một số nguyên."})
-
     
 if __name__ == '__main__':
-    openai_handler = PineconeOpenAIHandler("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")
-    pc = Pinecone(api_key="020a8257-5dd3-41f3-a710-53d7c6fac5d9")
+    OPENAI_API_KEY = "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"
+    GOOGLE_API_KEY = "AIzaSyAYxPv1wiS66B0qjiTO59R6t1V5j27dcrY"
+    PINECONE_API_KEY = "020a8257-5dd3-41f3-a710-53d7c6fac5d9"
+    ANTHROPIC_API_KEY = "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"
+
+    llm_handler = ContentProcessor(OPENAI_API_KEY, GOOGLE_API_KEY, ANTHROPIC_API_KEY)
+    pc = Pinecone(api_key=PINECONE_API_KEY)
     index = pc.Index("generate-quizz-with-raw-data")
-    app = PineconeQuizzSearchApp(openai_handler, index)
+
+    openai_client = OpenAI(api_key=OPENAI_API_KEY)
+
+    app = PineconeQuizzSearchApp(llm_handler, index, openai_client)
     app.run()

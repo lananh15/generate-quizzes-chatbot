@@ -1,6 +1,6 @@
 import os
 from pinecone import Pinecone, ServerlessSpec
-import openai
+from openai import OpenAI
 from typing import List
 
 # Khởi tạo Pinecone và OpenAI
@@ -12,7 +12,7 @@ if index_name not in pc.list_indexes().names():
     pc.create_index(
         name=index_name,
         dimension=1536,  # Đảm bảo dimension khớp với model embedding bạn sử dụng
-        metric='euclidean',
+        metric='cosine',
         spec=ServerlessSpec(
             cloud='aws',
             region='us-east-1'
@@ -22,29 +22,30 @@ if index_name not in pc.list_indexes().names():
 # Kết nối đến index
 index = pc.Index(index_name)
 
-openai.api_key = "sk-proj-e3BgNgIvICywLYluJyeUT3BlbkFJenYTISe35HiZEiki9Gz3"
+OPENAI_API_KEY = "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"
+openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
 def read_file(file_path: str) -> str:
-    """Đọc nội dung từ tệp văn bản."""
+    # Đọc nội dung từ tệp văn bản
     with open(file_path, 'r', encoding='utf-8') as file:
         return file.read()
 
 def split_into_chunks(text: str) -> List[str]:
-    """Chia văn bản thành các chunk nhỏ hơn dựa trên dấu phân tách '\n\n'."""
+    # Chia văn bản thành các chunk nhỏ hơn dựa trên dấu phân tách '\n\n'.
     chunks = text.split('\n\n')
     chunks = [chunk.strip() for chunk in chunks if chunk.strip()]
     return chunks
 
 def create_embedding(text: str) -> List[float]:
-    """Tạo embedding cho văn bản sử dụng OpenAI."""
-    response = openai.Embedding.create(
+    # Tạo embedding cho văn bản sử dụng OpenAI
+    response = openai_client.embeddings.create(
         input=text,
         model="text-embedding-ada-002"
     )
-    return response['data'][0]['embedding']
+    return response.data[0].embedding
 
 def upload_to_pinecone(chunks: List[str]):
-    """Tải các chunk lên Pinecone."""
+    # Tải các chunk lên Pinecone
     vectors = []
     for i, chunk in enumerate(chunks):
         vector = create_embedding(chunk)
