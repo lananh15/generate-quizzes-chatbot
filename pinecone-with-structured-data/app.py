@@ -59,7 +59,7 @@ class PineconeQuizzSearchApp(QuizzSearchAppBase, LLMHandlerBase):
         chapter_structure = self.get_chapter_structure()
         response = "Các chương được hỗ trợ:\n"
         for idx, (chapter_title, chapter_data) in enumerate(chapter_structure.items(), start=1):
-            response += f"\n{idx}. {chapter_title}"
+            response += f"\n<b>{idx}. {chapter_title}</b>"
             for heading_title, heading_data in chapter_data['headings'].items():
                 response += f"- {heading_title}"
                 for subheading_title, subsubheadings in heading_data['subheadings'].items():
@@ -72,7 +72,6 @@ class PineconeQuizzSearchApp(QuizzSearchAppBase, LLMHandlerBase):
         response += "\n<code>`subheading: [tên tiêu đề phụ]: [số lượng câu hỏi (tối đa 10)]`</code> để tạo số lượng câu hỏi cho tiêu đề phụ."
         response += "\n<code>`subsubheading: [tên tiểu mục]: [số lượng câu hỏi (tối đa 5)]`</code> để tạo số lượng câu hỏi cho tiểu mục."
 
-        response += "\n\nNhập <code>`mode: openai`</code> hoặc <code>`mode: gemini`</code> để chọn chế độ và <code>`mode`</code> để xem chế độ hiện tại."
         response = response.replace("\n", "<br>")
         response = response.replace("\n", "<br>")
         response = response.replace("- ", "<br>&nbsp;&nbsp;- ")

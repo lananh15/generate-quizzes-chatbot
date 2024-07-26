@@ -55,7 +55,7 @@ class ElasticsearchQuizzSearchApp(QuizzSearchAppBase, LLMHandlerBase):
         chapter_structure = self.get_chapter_structure()
         response = "Các chương được hỗ trợ:\n"
         for idx, (chapter_title, chapter_data) in enumerate(chapter_structure.items(), start=1):
-            response += f"\n{idx}. {chapter_title}"
+            response += f"\n<b>{idx}. {chapter_title}</b>"
             for heading_title, heading_data in chapter_data['headings'].items():
                 response += f"- {heading_title}"
                 for subheading_title, subsubheadings in heading_data['subheadings'].items():
