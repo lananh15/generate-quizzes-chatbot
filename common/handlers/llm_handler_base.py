@@ -37,25 +37,28 @@ class LLMHandlerBase:
         return [q.strip() for q in questions if q.strip().startswith("Câu hỏi:")]
 
     def _build_prompt(self, num_questions: int, content: str) -> str:
-        return f"""Tạo {num_questions} câu hỏi trắc nghiệm dựa trên nội dung sau. Tuân thủ các quy tắc sau:
-        1. Mỗi câu hỏi bắt đầu bằng "Câu hỏi:" (không có số).
-        2. Sau "Câu hỏi:" là nội dung đầy đủ của câu hỏi.
-        3. Mỗi câu hỏi có 4 lựa chọn, bắt đầu bằng A, B, C, D. Tất cả các lựa chọn phải được hiển thị đầy đủ.
-        4. Cuối mỗi câu hỏi, chỉ ra đáp án đúng bằng cách viết "Đáp án: [chữ cái]".
-        5. Các câu hỏi được phân tách bằng một dòng trống.
-        6. Đảm bảo rằng các câu hỏi liên quan trực tiếp đến nội dung được cung cấp, tuyệt đối không được tự chế ra thêm nội dung.
+        return [
+            {"role": "system", "content": f"Bạn là một trợ lý AI chuyên tạo câu hỏi trắc nghiệm cho môn học 'Quản lý dự án' dựa trên nội dung được cung cấp."},
+            {"role": "user", "content": f"""Tạo {num_questions} câu hỏi trắc nghiệm dựa trên nội dung sau. Tuân thủ các quy tắc sau:
+            1. Mỗi câu hỏi bắt đầu bằng "Câu hỏi:" (không có số).
+            2. Sau "Câu hỏi:" là nội dung đầy đủ của câu hỏi.
+            3. Mỗi câu hỏi có 4 lựa chọn, bắt đầu bằng A, B, C, D. Tất cả các lựa chọn phải được hiển thị đầy đủ.
+            4. Cuối mỗi câu hỏi, chỉ ra đáp án đúng bằng cách viết "Đáp án: [chữ cái]".
+            5. Các câu hỏi được phân tách bằng một dòng trống.
+            6. Đảm bảo rằng các câu hỏi liên quan trực tiếp đến nội dung được cung cấp, tuyệt đối không được tự chế ra thêm nội dung.
 
-        Nội dung:
-        {content}
+            Nội dung:
+            {content}
 
-        Ví dụ format:
-        Câu hỏi: Nội dung đầy đủ của câu hỏi ở đây?
-        A. Lựa chọn A
-        B. Lựa chọn B
-        C. Lựa chọn C
-        D. Lựa chọn D
-        Đáp án: B
-        """
+            Ví dụ format:
+            Câu hỏi: Nội dung đầy đủ của câu hỏi ở đây?
+            A. Lựa chọn A
+            B. Lựa chọn B
+            C. Lựa chọn C
+            D. Lựa chọn D
+            Đáp án: B
+            """}
+        ]
     
     # Đếm số lượng token trong nội dung tổng hợp được
     def _count_tokens(self, text: str) -> int:

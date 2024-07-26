@@ -6,8 +6,12 @@ from typing import List
 # Khởi tạo Pinecone và OpenAI
 pc = Pinecone(api_key="020a8257-5dd3-41f3-a710-53d7c6fac5d9")
 
-# Kết nối đến index đã tồn tại hoặc tạo mới nếu chưa tồn tại
+# Kết nối đến index đã tồn tại
 index_name = "generate-quizz-with-raw-data"
+# Kiểm tra xem index có tồn tại không và xóa nếu có
+if index_name in pc.list_indexes().names():
+    pc.delete_index(index_name)
+# Tạo mới nếu chưa tồn tại
 if index_name not in pc.list_indexes().names():
     pc.create_index(
         name=index_name,

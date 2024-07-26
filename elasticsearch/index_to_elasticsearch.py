@@ -65,4 +65,4 @@ es.indices.create(index=index_name, body=index_mapping)
 for doc_id, doc in enumerate(data['chapters']):
     es.index(index=index_name, id=doc_id, body=doc)
 
-print(f"Indexed {len(data['chapters'])} documents into '{index_name}' index.")
+print(f"Indexed {len(data['chapters'])} chapters into '{index_name}' index.")
