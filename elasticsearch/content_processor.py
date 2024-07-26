@@ -6,10 +6,9 @@ class ContentProcessor(LLMHandlerBase):
     # Tạo ra danh sách các câu hỏi dựa trên nội dung đầu vào
     def generate_questions(self, content: str, num_questions: int) -> List[str]:
         if self._count_tokens(content) <= 3800:
-            print("\nnho hon 3800 token")
+            print(content)
             return self._generate_questions_direct(content, num_questions)
         else:
-            print("\nlon hon 3800 token")
             return self._generate_questions_chunked(content, num_questions)
 
     # Tổng hợp các câu hỏi có được sau mỗi chunk

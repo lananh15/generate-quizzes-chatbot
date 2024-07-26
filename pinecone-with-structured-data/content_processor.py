@@ -73,12 +73,28 @@ class ContentProcessor(LLMHandlerBase):
         for result in pinecone_results:
             metadata = result['metadata']
             content = f"Chapter: {metadata.get('chapter_title', '')}\n"
+            
             if 'heading_title' in metadata:
                 content += f"Heading: {metadata['heading_title']}\n"
             if 'subheading_title' in metadata:
                 content += f"Subheading: {metadata['subheading_title']}\n"
             if 'subsubheading_title' in metadata:
                 content += f"Subsubheading: {metadata['subsubheading_title']}\n"
-            content += f"Content: {metadata.get('content', '')}\n\n"
+            
+            # Tạo một danh sách để lưu trữ tất cả các loại nội dung
+            content_parts = []
+            if 'subsubheading_content' in metadata:
+                content_parts.append(metadata['subsubheading_content'])
+            if 'subheading_content' in metadata:
+                content_parts.append(metadata['subheading_content'])
+            if 'heading_content' in metadata:
+                content_parts.append(metadata['heading_content'])
+            if 'content' in metadata:
+                content_parts.append(metadata['content'])
+            
+            # Kết hợp tất cả các phần nội dung
+            content += "Content:\n" + "\n".join(content_parts) + "\n\n"
             contents.append(content)
+        
         return "\n".join(contents)
+
