@@ -77,7 +77,7 @@ class PineconeQuizzSearchApp(QuizzSearchAppBase, LLMHandlerBase):
         # Truy vấn Pinecone
         result = self.pinecone_handler.query(
             vector=query_embedding,
-            top_k=10,
+            top_k=4,
             include_metadata=True
         )
 
@@ -103,7 +103,11 @@ class PineconeQuizzSearchApp(QuizzSearchAppBase, LLMHandlerBase):
 
             pinecone_results = self.search_pinecone(keyword)
             print(pinecone_results)
-            results_to_use = [result for result in pinecone_results if keyword.lower() in result['metadata']['text'].lower()]
+            keyword_parts = keyword.lower().split()
+            results_to_use = [
+                result for result in pinecone_results 
+                if all(part in result['metadata']['text'].lower() for part in keyword_parts)
+            ]
             print(f"\nCác kết quả dùng để sinh quizz:\n")
             print(results_to_use)
 
