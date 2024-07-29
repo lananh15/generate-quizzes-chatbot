@@ -9,6 +9,7 @@ from openpyxl import Workbook, load_workbook
 from flask import jsonify
 from pinecone import Pinecone
 from openai import OpenAI
+import re
 
 class PineconeQuizzSearchApp(QuizzSearchAppBase, LLMHandlerBase):
     def __init__(self, llm_handler, pinecone_index, openai_client):
@@ -104,9 +105,15 @@ class PineconeQuizzSearchApp(QuizzSearchAppBase, LLMHandlerBase):
             pinecone_results = self.search_pinecone(keyword)
             print(pinecone_results)
             keyword_parts = keyword.lower().split()
+            def check_keyword_in_text(text):
+                # Chia văn bản thành các vế
+                clauses = re.split(r'[,.]', text.lower())
+                # Kiểm tra từng vế
+                return any(all(part in clause for part in keyword_parts) for clause in clauses)
+
             results_to_use = [
                 result for result in pinecone_results 
-                if all(part in result['metadata']['text'].lower() for part in keyword_parts)
+                if check_keyword_in_text(result['metadata']['text'])
             ]
             print(f"\nCác kết quả dùng để sinh quizz:\n")
             print(results_to_use)
