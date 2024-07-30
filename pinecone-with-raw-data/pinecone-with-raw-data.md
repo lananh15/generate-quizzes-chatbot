@@ -1,7 +1,7 @@
 
 ## :computer: Dùng chatbot hỗ trợ sinh câu hỏi (sử dụng Pinecone với dữ liệu thô)
 **1. Lưu dữ liệu thô từ file qtda_raw.txt lên Pinecone (nếu muốn dùng index của riêng bạn trên pinecone, nếu không hãy xem mục số 2)**  
-  - Run file **save_raw_data_to_pinecone.py** để có thể lưu dữ liệu từ file **qqtda_raw.txt** trong thư mục **data** lên Pinecone theo các vector, chatbot sẽ sử dụng dữ liệu trên Pinecone để tạo câu hỏi cho môn học.  
+  - Run file **save_raw_data_to_pinecone.py** để có thể lưu dữ liệu từ file **qtda_raw.txt** trong thư mục **data** lên Pinecone theo các vector, chatbot sẽ sử dụng dữ liệu trên Pinecone để tạo câu hỏi cho môn học.  
 
   **Lưu ý:** Thay đổi API key, tên index khác từ tài khoản Pinecone và có thể sử dụng openai_api_key của riêng bạn.  
   - Để làm được, bạn cần phải có tài khoản trên https://www.pinecone.io/ và tạo index. Sau đó thay đổi các giá trị **api_key**, **index_name**, **dimension** (nếu dùng mô hình text-embedding-ada-002 của openAI thì giữ nguyên 1536), **cloud** và **region** trong đoạn code dưới đây của file **save_structured_data_to_pinecone.py** sao cho phù hợp.
