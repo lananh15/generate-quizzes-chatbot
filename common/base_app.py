@@ -30,7 +30,7 @@ class QuizzSearchAppBase:
         
         # chỉ dùng cho pinecone với raw data
         elif message.lower().startswith('keyword:'):
-            return self._handle_questions_with_keyword(message, 20)
+            return self._handle_questions_with_keyword(message, 15)
         
         elif message.lower() == 'mode':
             return jsonify({"response": f"Chế độ hiện tại: {self.llm_handler.get_mode()}"})

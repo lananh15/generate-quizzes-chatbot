@@ -37,7 +37,7 @@
   - Run file **app.py** và truy cập vào http://127.0.0.1:5000/ để dùng chatbot ở localhost.
   - Các cú pháp để dùng chatbot:  
     - **Xem các chương mà chatbot hỗ trợ:** ```chương hỗ trợ```
-    - **Tạo số lượng câu hỏi cho keyword bất kì:** ```keyword: [keyword]: [số lượng câu hỏi (tối đa 10)]```  
+    - **Tạo số lượng câu hỏi cho keyword bất kì:** ```keyword: [keyword]: [số lượng câu hỏi (tối đa 15)]```  
 
 
 
