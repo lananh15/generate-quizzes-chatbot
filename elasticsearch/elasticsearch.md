@@ -2,8 +2,14 @@
 
 **1. Tải Elasticsearch**  
 Mở Command Prompt:
-  - Chạy lệnh: ```docker pull elasticsearch:8.14.3``` để tải Elasticsearch.
-  - Kiểm tra đã tải thành công Elasticsearch hay chưa: ```docker images``` nếu thành công sẽ hiển thị "elasticsearch" ở cột REPOSITORY.
+  - Chạy lệnh tải Elasticsearch: 
+  ```bash 
+  docker pull elasticsearch:8.14.3
+  ```
+  - Kiểm tra đã tải thành công Elasticsearch hay chưa nếu thành công sẽ hiển thị "elasticsearch" ở cột REPOSITORY  
+  ```bash
+  docker images
+  ``` 
 
 **2. Sử dụng Elasticsearch**  
 Chạy elasticsearch container:  
@@ -24,7 +30,10 @@ Mở Docker Desktop:
 
 **2. Sử dụng Kibana**  
 Mở Command Prompt:
-  - Kiểm tra đã tải thành công Kibana hay chưa: ```docker images``` nếu thành công sẽ hiển thị "kibana" ở cột REPOSITORY.
+  - Kiểm tra đã tải thành công Kibana hay chưa nếu thành công sẽ hiển thị "kibana" ở cột REPOSITORY: 
+  ```bash
+  docker images
+  ``` 
   - Chạy Kibana container:  
   ```bash
   docker run -d --name kibana --link elasticsearch:elasticsearch -p 5601:5601 kibana:8.14.3
