@@ -1,6 +1,6 @@
 # generate-quizz-chatbot
 
-### ℹ️ Requirements
+### ⚠️ Requirements
     Python = 3.12.x
 
 ## :arrow_down: Installation
