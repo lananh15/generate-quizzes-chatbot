@@ -54,7 +54,7 @@ function sendChatMessage(message) {
             }
         },
         error: function() {
-            addMessage('bot', 'Sorry, there was an error processing your request.');
+            addMessage('bot', 'Rất tiếc, đã xảy ra lỗi khi xử lý yêu cầu của bạn.');
         }
     });
 }
