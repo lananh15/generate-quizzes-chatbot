@@ -17,7 +17,7 @@ pip install -r requirements.txt
 
 **Lưu ý:** Để dùng được chatbot sinh câu hỏi, bạn phải tạo file **config.json** trong thư mục gốc là **generate-quizzes-chatbot** với nội dung là các API key (của bạn) tương ứng như hình dưới đây:  
 
-![config](https://github.com/user-attachments/assets/0281a81b-0cad-4667-afd1-dd5dd0e162c1)
+![config.json](https://github.com/user-attachments/assets/bd87424f-8cb1-4a27-80ca-3161a437ba70)
 
 ## 📝 About Chatbot
 Chatbot hỗ trợ sinh câu hỏi cho môn học "Quản lý dự án CNTT" với nội dung môn học gồm 8 chương:  
