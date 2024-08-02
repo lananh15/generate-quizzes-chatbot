@@ -7,4 +7,4 @@ elasticsearch
 openpyxl
 langchain_openai
 langchain_anthropic
-langchain-google-genai
+langchain_google_genai
