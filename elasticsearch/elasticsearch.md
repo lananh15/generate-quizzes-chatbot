@@ -6,7 +6,11 @@ Mở Command Prompt:
   - Kiểm tra đã tải thành công Elasticsearch hay chưa: ```docker images``` nếu thành công sẽ hiển thị "elasticsearch" ở cột REPOSITORY.
 
 **2. Sử dụng Elasticsearch**  
-Chạy elasticsearch container: ```docker run -d --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e "xpack.security enabled=false" elasticsearch:8.14.3```. Kiểm tra bằng cách truy cập http://localhost:9200/ nếu đã chạy thành công thì web sẽ hiển thị thông tin chi tiết về cấu hình và phiên bản của cluster Elasticsearch.  
+Chạy elasticsearch container:  
+```bash
+docker run -d --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e "xpack.security enabled=false" elasticsearch:8.14.3
+```   
+Kiểm tra bằng cách truy cập http://localhost:9200/ nếu đã chạy thành công thì web sẽ hiển thị thông tin chi tiết về cấu hình và phiên bản của cluster Elasticsearch.  
 
 Về sau chỉ cần vào Docker Desktop -> Chọn tab Containers và Run elasticsearch container (không cần viết lệnh trên Command Prompt nữa).  
 
@@ -21,7 +25,11 @@ Mở Docker Desktop:
 **2. Sử dụng Kibana**  
 Mở Command Prompt:
   - Kiểm tra đã tải thành công Kibana hay chưa: ```docker images``` nếu thành công sẽ hiển thị "kibana" ở cột REPOSITORY.
-  - Chạy Kibana container: ```docker run -d --name kibana --link elasticsearch:elasticsearch -p 5601:5601 kibana:8.14.3```. Kiểm tra bằng cách truy cập http://localhost:5601/ nếu đã chạy thành công thì web sẽ hiển thị giao diện của Kibana.
+  - Chạy Kibana container:  
+  ```bash
+  docker run -d --name kibana --link elasticsearch:elasticsearch -p 5601:5601 kibana:8.14.3
+  ```  
+  Kiểm tra bằng cách truy cập http://localhost:5601/ nếu đã chạy thành công thì web sẽ hiển thị giao diện của Kibana.
     
   **Lưu ý:** Phải Run elasticsearch container trước và Run kibana container sau thì Kibana sẽ kết nối được với Elasticsearch.  
 
@@ -48,7 +56,8 @@ Bật tab Dev Tools trên giao diện của Kibana và có thể thử 1 số l�
     - **Tạo số lượng câu hỏi cho tiểu mục bất kì:** ```subsubheading: [tên tiểu mục]: [số lượng câu hỏi (tối đa 5)]```  
   
   **Lưu ý:** Nếu câu hỏi sinh ra của 1 chương bị thiếu nội dung, không bao quát được chương thì vui lòng dùng cú pháp tạo câu hỏi cho các phần nhỏ hơn trong chương đó rồi tổng hợp lại các câu hỏi thì sẽ bao quát hơn.
-
+  - Bạn có thể chọn chế độ sinh câu hỏi như Gemini, Claude hoặc ChatGPT nếu bạn muốn.    
+  ![chatbot](https://github.com/user-attachments/assets/f64a4b27-d910-4428-a72d-90876bfc53df)
 
 
 

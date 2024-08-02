@@ -7,7 +7,7 @@
   - Để làm được, bạn cần phải có tài khoản trên https://www.pinecone.io/ và tạo index. Sau đó thay đổi các giá trị **api_key**, **index_name**, **dimension** (nếu dùng mô hình text-embedding-ada-002 của openAI thì giữ nguyên 1536), **cloud** và **region** trong đoạn code dưới đây của file **save_structured_data_to_pinecone.py** sao cho phù hợp.
   ```python
     # Tạo đối tượng Pinecone
-    pc = Pinecone(api_key="020a8257-5dd3-41f3-a710-53d7c6fac5d9")
+    pc = Pinecone(api_key=config['PINECONE_API_KEY'])
 
     # Kết nối đến index đã tồn tại hoặc tạo mới nếu chưa tồn tại
     index_name = "generate-quizz"
@@ -23,14 +23,22 @@
         ) 
   ```  
 
-  - Ngoài ra, cũng cần thay đổi **api_key** và **index** trong đoạn code dưới đây của file **app.py**  
+  - Ngoài ra, cũng cần thay đổi **index** trong đoạn code dưới đây của file **app.py**  
   ```python
     if __name__ == '__main__':
-    openai_handler = PineconeOpenAIHandler("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")
-    pc = Pinecone(api_key="020a8257-5dd3-41f3-a710-53d7c6fac5d9")
-    index = pc.Index("generate-quizz")
-    app = PineconeQuizzSearchApp(openai_handler, index)
-    app.run()
+      OPENAI_API_KEY = config['OPENAI_API_KEY']
+      GOOGLE_API_KEY = config['GOOGLE_API_KEY']
+      PINECONE_API_KEY = config['PINECONE_API_KEY']
+      ANTHROPIC_API_KEY = config['ANTHROPIC_API_KEY']
+
+      llm_handler = ContentProcessor(OPENAI_API_KEY, GOOGLE_API_KEY, ANTHROPIC_API_KEY)
+      pc = Pinecone(api_key=PINECONE_API_KEY)
+      index = pc.Index("generate-quizz-with-raw-data") # Thay đổi tên index của pinecone thành của bạn
+
+      openai_client = OpenAI(api_key=OPENAI_API_KEY)
+
+      app = PineconeQuizzSearchApp(llm_handler, index, openai_client)
+      app.run()
   ```  
 
 **2. Sử dụng chatbot**  
@@ -38,6 +46,9 @@
   - Các cú pháp để dùng chatbot:  
     - **Xem các chương mà chatbot hỗ trợ:** ```chương hỗ trợ```
     - **Tạo số lượng câu hỏi cho keyword bất kì:** ```keyword: [keyword]: [số lượng câu hỏi (tối đa 15)]```  
+  - Bạn có thể chọn chế độ sinh câu hỏi như Gemini, Claude hoặc ChatGPT nếu bạn muốn.  
+  ![chatbot](https://github.com/user-attachments/assets/f64a4b27-d910-4428-a72d-90876bfc53df)
+
 
 
 
