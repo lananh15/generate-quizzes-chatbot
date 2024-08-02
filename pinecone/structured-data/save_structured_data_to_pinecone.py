@@ -5,12 +5,20 @@ import json
 import logging
 import os
 
+# Xác định đường dẫn đến thư mục gốc của dự án
+base_dir = os.path.dirname(os.path.abspath(__file__))
+config_path = os.path.join(base_dir, '../..', 'config.json')
+
+# Đọc tệp cấu hình
+with open(config_path) as config_file:
+    config = json.load(config_file)
+
 # Khởi tạo OpenAI
-OPENAI_API_KEY = "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"
+OPENAI_API_KEY = config['OPENAI_API_KEY']
 openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
 # Tạo đối tượng Pinecone
-pc = Pinecone(api_key="020a8257-5dd3-41f3-a710-53d7c6fac5d9")
+pc = Pinecone(api_key=config['PINECONE_API_KEY'])
 
 # Kết nối đến index đã tồn tại
 index_name = "generate-quizz"
@@ -34,8 +42,8 @@ index = pc.Index(index_name)
 # Định nghĩa đường dẫn thư mục chứa script
 script_dir = os.path.dirname(__file__)
 
-# Lên một cấp thư mục và kết hợp với tên file 'qtda.json'
-json_path = os.path.join(script_dir, '..', 'data', 'qtda.json')
+# Lên 2 cấp thư mục và kết hợp với tên file 'qtda.json'
+json_path = os.path.join(script_dir, '../..', 'data', 'qtda.json')
 
 # Chuẩn hóa đường dẫn để loại bỏ các thành phần dư thừa (nếu có)
 json_path = os.path.abspath(json_path)

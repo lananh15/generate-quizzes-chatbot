@@ -1,6 +1,6 @@
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 from common.base_app import QuizzSearchAppBase
 from common.handlers.llm_handler_base import LLMHandlerBase
 from content_processor import ContentProcessor
@@ -10,6 +10,7 @@ from flask import jsonify
 from pinecone import Pinecone
 from openai import OpenAI
 import re
+import json
 
 class PineconeQuizzSearchApp(QuizzSearchAppBase, LLMHandlerBase):
     def __init__(self, llm_handler, pinecone_index, openai_client):
@@ -126,12 +127,20 @@ class PineconeQuizzSearchApp(QuizzSearchAppBase, LLMHandlerBase):
             return jsonify({"response": response})
         except ValueError:
             return jsonify({"response": "Số lượng câu hỏi phải là một số nguyên."})
+
+# Xác định đường dẫn đến thư mục gốc của dự án
+base_dir = os.path.dirname(os.path.abspath(__file__))
+config_path = os.path.join(base_dir, '../..', 'config.json')
+
+# Đọc tệp cấu hình
+with open(config_path) as config_file:
+    config = json.load(config_file)
     
 if __name__ == '__main__':
-    OPENAI_API_KEY = "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"
-    GOOGLE_API_KEY = "AIzaSyAYxPv1wiS66B0qjiTO59R6t1V5j27dcrY"
-    PINECONE_API_KEY = "020a8257-5dd3-41f3-a710-53d7c6fac5d9"
-    ANTHROPIC_API_KEY = "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"
+    OPENAI_API_KEY = config['OPENAI_API_KEY']
+    GOOGLE_API_KEY = config['GOOGLE_API_KEY']
+    PINECONE_API_KEY = config['PINECONE_API_KEY']
+    ANTHROPIC_API_KEY = config['ANTHROPIC_API_KEY']
 
     llm_handler = ContentProcessor(OPENAI_API_KEY, GOOGLE_API_KEY, ANTHROPIC_API_KEY)
     pc = Pinecone(api_key=PINECONE_API_KEY)

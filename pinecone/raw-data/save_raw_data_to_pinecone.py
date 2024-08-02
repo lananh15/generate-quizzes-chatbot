@@ -2,9 +2,18 @@ import os
 from pinecone import Pinecone, ServerlessSpec
 from openai import OpenAI
 from typing import List
+import json
+
+# Xác định đường dẫn đến thư mục gốc của dự án
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+config_path = os.path.join(base_dir, 'config.json')
+
+# Đọc tệp cấu hình
+with open(config_path) as config_file:
+    config = json.load(config_file)
 
 # Khởi tạo Pinecone và OpenAI
-pc = Pinecone(api_key="020a8257-5dd3-41f3-a710-53d7c6fac5d9")
+pc = Pinecone(api_key=config['PINECONE_API_KEY'])
 
 # Kết nối đến index đã tồn tại
 index_name = "generate-quizz-with-raw-data"
@@ -26,7 +35,7 @@ if index_name not in pc.list_indexes().names():
 # Kết nối đến index
 index = pc.Index(index_name)
 
-OPENAI_API_KEY = "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"
+OPENAI_API_KEY = config['OPENAI_API_KEY']
 openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
 def read_file(file_path: str) -> str:
@@ -62,8 +71,8 @@ def upload_to_pinecone(chunks: List[str]):
 # Định nghĩa đường dẫn thư mục chứa script
 script_dir = os.path.dirname(__file__)
 
-# Lên một cấp thư mục và kết hợp với tên file 'qtda_raw.txt'
-file_path = os.path.join(script_dir, '..', 'data', 'qtda_raw.txt')
+# Lên 2 cấp thư mục và kết hợp với tên file 'qtda_raw.txt'
+file_path = os.path.join(script_dir, '../..', 'data', 'qtda_raw.txt')
 
 # Chuẩn hóa đường dẫn để loại bỏ các thành phần dư thừa (nếu có)
 file_path = os.path.abspath(file_path)
