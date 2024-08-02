@@ -6,9 +6,9 @@
 **1. Clone repository**
 
 **2. Tải các thư viện cần thiết**
-    ```bash
-    pip install -r requirements.txt
-    ```
+```bash
+pip install -r requirements.txt
+```
 
 **3. Chạy python server**
   - Nếu muốn dùng chatbot với dữ liệu được lưu trên pinecone (có raw-data và structured-data) thì xem file **pinecone-with-raw-data.md** và **pinecone-with-structured-data.md** hướng dẫn tương ứng trong các thư mục pinecone/raw-data và pinecone/structured-data.
@@ -113,7 +113,7 @@ Chatbot hỗ trợ sinh câu hỏi cho môn học "Quản lý dự án CNTT" v�
   - Phân tích rủi ro
   - Lập kế hoạch đối phó
   - Kiểm soát rủi ro  
-  
+
 **8. Quản lý chất lượng**
 - Khái niệm
 - Quy trình quản lý chất lượng
@@ -130,3 +130,13 @@ Chatbot hỗ trợ sinh câu hỏi cho môn học "Quản lý dự án CNTT" v�
     - Biểu đồ Pareto
     - Biểu đồ flowchart
   - Six sigma
+
+## 📚 Reference slides for data of Chatbot
+- Chương 1: Tổng quan [Xem ngay](https://drive.google.com/file/d/1x39z2P05V_opGRKuhmcYlv2zew-2gUtS/view?usp=sharing)
+- Chương 2: Cơ cấu quản lý dự án [Xem ngay](https://drive.google.com/file/d/1o7wxjtSfLGtvvh-bRjNnUZ1JT-MlosY6/view?usp=sharing)
+- Chương 3: Quy trình quản lý dự án [Xem ngay](https://drive.google.com/file/d/1drsYxju-NwqXVlf4XyXVHedbBuzqzP60/view?usp=sharing)
+- Chương 4: Quản lý phạm vi [Xem ngay](https://drive.google.com/file/d/1Ypes5nAxphjN5pBAkQeR2avmTQV7gJ7E/view?usp=sharing)
+- Chương 5: Quản lý thời gian [Xem ngay](https://drive.google.com/file/d/1Tf-mpLD4ip2DFYSa2LRH9FbWnSlqz1En/view?usp=sharing)
+- Chương 6: Quản lý chi phí [Xem ngay](https://drive.google.com/file/d/1VopOg0HCD7AdKZmDbx8zBfavMQS2wiz5/view?usp=sharing)
+- Chương 7: Quản lý rủi ro [Xem ngay](https://drive.google.com/file/d/1W5Twm2s6YMXDFOmwsmGRuNfN2WiMgmEx/view?usp=sharing)
+- Chương 8: Quản lý chất lượng [Xem ngay](https://drive.google.com/file/d/1ikRiCLtJw6jyP2yAuLoUO1Jo58Iq6TA5/view?usp=sharing)
