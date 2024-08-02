@@ -1,5 +1,6 @@
 ## ⚠️ Requirements
     Python = 3.12.x
+    pip
 
 ## :arrow_down: Installation
 
