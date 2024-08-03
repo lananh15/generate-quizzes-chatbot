@@ -1,6 +1,6 @@
 ## ⚠️ Requirements
-    Python = 3.12.x
-    pip
+    Python >= 3.8.x
+    pip = 24.2
 
 ## :arrow_down: Installation
 
