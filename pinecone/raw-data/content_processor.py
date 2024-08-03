@@ -52,15 +52,9 @@ class ContentProcessor(LLMHandlerBase):
         
         return chunks
 
-    # Tạo một chuỗi văn bản mô tả ngữ cảnh dựa trên các thông tin từ metadata và nội dung đầu vào
-    def _build_context(self, metadata: Dict[str, str], content: str) -> str:
-        context = f"Chapter: {metadata.get('chapter_title', '')}\n"
-        for title_type in ['heading', 'subheading', 'subsubheading']:
-            if metadata.get(f'{title_type}_title'):
-                context += f"{title_type.capitalize()}: {metadata[f'{title_type}_title']}\n"
-        context += f"Keywords: {', '.join(metadata.get('keywords', []))}\n"
-        context += f"Content: {content}"
-        return context
+    def _build_context(self, result: Dict[str, Dict[str, str]]) -> str:
+        content = result['metadata'].get('text', '')
+        return f"Content: {content}"
 
     # Kết hợp nội dung từ nhiều kết quả tìm kiếm Pinecone thành một chuỗi văn bản tổng hợp
     def _combine_content(self, pinecone_results: List[Dict]) -> str:
