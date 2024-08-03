@@ -41,15 +41,15 @@ class ContentProcessor(LLMHandlerBase):
         return [q.strip() for q in questions if q.strip().startswith("Câu hỏi:")]
 
     # Chia nội dung ra thành các chunk nếu nội dung quá dài
-    def _chunk_content(self, pinecone_results: List[Dict]) -> List[Tuple[str, Dict[str, str]]]:
+    def _chunk_content(self, pinecone_results: List[Dict]) -> List[str]:
         chunks = []
         for result in pinecone_results:
-            metadata = result['metadata']
+            metadata = result.get('metadata', {})
             content = metadata.get('text', '')
             
-            chunk_metadata = {k: metadata.get(k, '') for k in ['chapter_title', 'heading_title', 'subheading_title', 'subsubheading_title', 'keywords']}
-            chunks.append((content, chunk_metadata))
-        
+            # Thêm nội dung vào danh sách chunks
+            chunks.append(content)
+            
         return chunks
 
     def _build_context(self, result: Dict[str, Dict[str, str]]) -> str:
