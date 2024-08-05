@@ -1,5 +1,39 @@
-## Giải thích các file dữ liệu  
-**1. Các file quizzes**  
-  Trong thư mục pinecone-with-raw-data (chỉ để đo Rouge cho 1 pipeline dùng pinecone đã được lưu dữ liệu thô):  
-  - Các file .txt trong thư mục **quizzes-txt** là các câu hỏi được tổng hợp thông qua chế độ ChatGPT, Gemini và Claude (bao gồm 410 câu hỏi được sinh ra từ tổng cộng 8 chương bài học).
-  - Các file .json trong thư mục **quizzes-json** được lưu từ các file .txt trong thư mục **quizzes-txt** theo dạng có cấu trúc được dùng để đo độ Rouge. 
+# Đánh Giá Tổng Quan Mô Hình Chatbot Sinh Câu Hỏi Trắc Nghiệm Môn Quản Lý Dự Án Với Dữ Liệu Thô Lưu Trữ Trong Pinecone.
+## Cài Đặt
+
+### Cài Đặt rouge_score
+
+```bash
+pip install rouge_score
+```
+
+## Sử Dụng
+
+### Chuẩn Bị Tệp Văn Bản (TXT)
+
+1. Tạo các câu hỏi được sinh ra từ 3 mô hình chatbot (ChatGPT, ClaudeAI, Gemini) với dữ liệu thô được lưu trữ trong Pinecone.
+2. Lưu các câu hỏi này vào thư mục `quizzes-txt` dưới dạng tệp văn bản (TXT) tương ứng với từng mô hình:
+   - Câu hỏi từ ChatGPT: `gpt_quizzes.txt`
+   - Câu hỏi từ ClaudeAI: `claude_quizzes.txt`
+   - Câu hỏi từ Gemini: `gemini_quizzes.txt`
+
+### Chuẩn Bị Tệp JSON
+
+1. Chạy tệp `txt2json.py` để chuyển đổi dữ liệu từ các tệp TXT sang tệp JSON.
+2. Tệp JSON sẽ được lưu vào thư mục `quizzes-json` với tên mô hình tương ứng:
+   - Tệp TXT của ChatGPT (`gpt_quizzes.txt`) sẽ chuyển thành `gpt_quizzes.json`
+   - Tệp TXT của ClaudeAI (`claude_quizzes.txt`) sẽ chuyển thành `claude_quizzes.json`
+   - Tệp TXT của Gemini (`gemini_quizzes.txt`) sẽ chuyển thành `gemini_quizzes.json`
+
+### Đo Lường ROUGE
+
+1. Chạy tệp `metric.py` để đo lường ROUGE cho các câu hỏi được sinh ra bởi 3 mô hình:
+   - ChatGPT (`gpt_quizzes.json`)
+   - ClaudeAI (`claude_quizzes.json`)
+   - Gemini (`gemini_quizzes.json`)
+
+```bash
+python metric.py
+```
+
+Các kết quả sẽ cho biết điểm ROUGE của từng bộ câu hỏi, giúp bạn đánh giá và so sánh chất lượng của các mô hình chatbot trong việc sinh ra câu hỏi.
