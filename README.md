@@ -20,8 +20,8 @@ pip install -r requirements.txt
 ![config.json](https://github.com/user-attachments/assets/bd87424f-8cb1-4a27-80ca-3161a437ba70)
 
 ## 📝 About Chatbot
-Chatbot hỗ trợ sinh câu hỏi cho môn học "Quản lý dự án CNTT" với nội dung môn học gồm 8 chương:  
-**1. Tổng quan**
+Chatbot hỗ trợ sinh câu hỏi trắc nghiệm cho môn học "Quản lý dự án CNTT" với nội dung môn học gồm 8 chương:  
+**Chương 1. Tổng quan**
 - Khái niệm về quản lý
 - Sự cần thiết của quản lý dự án
   - Các thống kê về quản lý dự án
@@ -46,7 +46,7 @@ Chatbot hỗ trợ sinh câu hỏi cho môn học "Quản lý dự án CNTT" v�
   - Giai đoạn kiểm thử chấp nhận
   - Giai đoạn vận hành  
 
-**2. Cơ cấu quản lý dự án**
+**Chương 2. Cơ cấu quản lý dự án**
 - Bộ ba ràng buộc của quản lý dự án
 - Các lĩnh vực kiến thức trong quản lý dự án
   - Chín lĩnh vực kiến thức cần phát triển
@@ -56,14 +56,14 @@ Chatbot hỗ trợ sinh câu hỏi cho môn học "Quản lý dự án CNTT" v�
 - Các công cụ và kỹ thuật
 - Các kỹ năng cần thiết  
 
-**3. Quy trình quản lý dự án**
+**Chương 3. Quy trình quản lý dự án**
 - Quy trình khởi động
 - Quy trình lập kế hoạch
 - Quy trình thực thi
 - Quy trình điều khiển
 - Quy trình kết thúc  
 
-**4. Quản lý phạm vi**
+**Chương 4. Quản lý phạm vi**
 - Quản lý phạm vi là gì
 - Khởi động (Initiation)
   - Quy trình chọn dự án
@@ -74,7 +74,7 @@ Chatbot hỗ trợ sinh câu hỏi cho môn học "Quản lý dự án CNTT" v�
 - Cấu trúc phân rã công việc (WBS – Work Break-down Structure)
 - Kiểm tra và điều khiển thay đổi phạm vi (Verification & Controling)  
 
-**5. Quản lý thời gian**
+**Chương 5. Quản lý thời gian**
 - Giới thiệu
 - Các quy trình quản lý thời gian dự án
   - Xác định các hoạt động
@@ -91,7 +91,7 @@ Chatbot hỗ trợ sinh câu hỏi cho môn học "Quản lý dự án CNTT" v�
 - Các kỹ thuật rút ngắn lịch biểu
 - Kết luận  
 
-**6. Quản lý chi phí**
+**Chương 6. Quản lý chi phí**
 - Giới thiệu
 - Khái niệm về quản lý chi phí
 - Quy trình quản lý chi phí
@@ -107,7 +107,7 @@ Chatbot hỗ trợ sinh câu hỏi cho môn học "Quản lý dự án CNTT" v�
 - Kiểm soát và điều chỉnh chi phí
 - EVM (Earned Value Management)  
 
-**7. Quản lý rủi ro**
+**Chương 7. Quản lý rủi ro**
 - Khái niệm rủi ro
 - Quy trình quản lý rủi ro
   - Xác định rủi ro
@@ -115,7 +115,7 @@ Chatbot hỗ trợ sinh câu hỏi cho môn học "Quản lý dự án CNTT" v�
   - Lập kế hoạch đối phó
   - Kiểm soát rủi ro  
 
-**8. Quản lý chất lượng**
+**Chương 8. Quản lý chất lượng**
 - Khái niệm
 - Quy trình quản lý chất lượng
   - Lập kế hoạch quản lý chất lượng
