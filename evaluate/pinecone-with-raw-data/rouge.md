@@ -1,5 +1,5 @@
 # Đánh Giá Tổng Quan Mô Hình Chatbot Sinh Câu Hỏi Trắc Nghiệm Môn Quản Lý Dự Án Với Dữ Liệu Thô Lưu Trữ Trong Pinecone.
-## Cài Đặt
+## ⚙️ Cài Đặt
 
 ### Cài Đặt rouge_score
 
@@ -7,7 +7,7 @@
 pip install rouge_score
 ```
 
-## Sử Dụng
+## 🧑‍💻 Sử Dụng
 
 ### Chuẩn Bị Tệp Văn Bản (TXT)
 
