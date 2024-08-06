@@ -36,4 +36,6 @@ pip install rouge_score
 python metric.py
 ```
 
-Các kết quả sẽ cho biết điểm ROUGE của từng bộ câu hỏi, giúp bạn đánh giá và so sánh chất lượng của các mô hình chatbot trong việc sinh ra câu hỏi.
+2. Các kết quả như hình bên dưới sẽ cho biết điểm ROUGE từng bộ câu hỏi của mỗi mô hình, giúp bạn đánh giá và so sánh chất lượng của các mô hình chatbot trong việc sinh ra câu hỏi.  
+![result](https://github.com/user-attachments/assets/5fe1cec1-fb9c-4caf-9237-9af15cf1e2d5)
+
