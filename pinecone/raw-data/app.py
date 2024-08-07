@@ -6,7 +6,7 @@ from common.handlers.llm_handler_base import LLMHandlerBase
 from content_processor import ContentProcessor
 from typing import List, Dict
 from openpyxl import Workbook, load_workbook
-from flask import jsonify
+from flask import jsonify, render_template
 from pinecone import Pinecone
 from openai import OpenAI
 import re
@@ -17,6 +17,12 @@ class PineconeQuizzSearchApp(QuizzSearchAppBase, LLMHandlerBase):
         super().__init__(llm_handler)
         self.pinecone_handler = pinecone_index
         self.openai_client = openai_client
+
+    def index(self):
+        instruction_1 = "Nhập <code>`chương hỗ trợ`</code> để xem các chương mà hiện tại chatbot hỗ trợ sinh câu hỏi."
+        instruction_2 = "Nhập <code>`keyword: [keyword]: [số lượng câu hỏi (tối đa 15)]`</code> để tạo số lượng câu hỏi cho keyword bạn cần."
+        instruction_3 = "Nếu câu hỏi sinh ra chưa bao quát được nội dung của keyword bạn cần, có thể nhập lại keyword để sinh thêm nhiều câu hỏi hoặc dùng keyword khác có liên quan để sinh câu hỏi."
+        return render_template('index.html', instruction_1=instruction_1, instruction_2=instruction_2, instruction_3=instruction_3)
     
     def _handle_chapter_structure(self):
         response = "1. Tổng quan về quản lý dự án\n2. Cơ cấu quản lý dự án\n3. Quy trình quản lý dự án\n4. Quản lý phạm vi\n5. Quản lý thời gian\n6. Quản lý chi phí\n7. Quản lý rủi ro\n8. Quản lý chất lượng"

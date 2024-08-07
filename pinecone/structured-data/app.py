@@ -6,7 +6,7 @@ from common.handlers.llm_handler_base import LLMHandlerBase
 from content_processor import ContentProcessor
 from typing import List, Dict
 from openpyxl import Workbook, load_workbook
-from flask import jsonify
+from flask import jsonify, render_template
 from pinecone import Pinecone
 from openai import OpenAI
 import json
@@ -16,6 +16,12 @@ class PineconeQuizzSearchApp(QuizzSearchAppBase, LLMHandlerBase):
         super().__init__(llm_handler)
         self.pinecone_handler = pinecone_index
         self.openai_client = openai_client
+
+    def index(self):
+        instruction_1 = "Nhập <code>`chương hỗ trợ`</code> để xem các chương, tiêu đề chính, tiêu đề phụ, tiểu mục của môn học mà hiện tại chatbot hỗ trợ sinh câu hỏi."
+        instruction_2 = "Nhập <code>`chapter: [tên chương]: [số lượng câu hỏi (tối đa 25)]`</code> để tạo số lượng câu hỏi cho chương.<br>Nhập <code>`heading: [tên tiêu đề chính]: [số lượng câu hỏi (tối đa 15)]`</code> để tạo số lượng câu hỏi cho tiêu đề chính.<br>Nhập <code>`subheading: [tên tiêu đề phụ]: [số lượng câu hỏi (tối đa 10)]`</code> để tạo số lượng câu hỏi cho tiêu đề phụ.<br>Nhập <code>`subsubheading: [tên tiểu mục]: [số lượng câu hỏi (tối đa 5)]`</code> để tạo số lượng câu hỏi cho tiểu mục."
+        instruction_3 = "Nếu câu hỏi sinh ra của 1 chương bị thiếu nội dung, không bao quát được chương, vui lòng dùng cú pháp tạo câu hỏi cho các phần nhỏ hơn trong chương đó rồi tổng hợp lại các câu hỏi thì sẽ bao quát hơn."
+        return render_template('index.html', instruction_1=instruction_1, instruction_2=instruction_2, instruction_3=instruction_3)
 
     # Lấy cấu trúc các chương, tiêu đề chính, tiêu đề phụ, tiểu mục
     def get_chapter_structure(self):
